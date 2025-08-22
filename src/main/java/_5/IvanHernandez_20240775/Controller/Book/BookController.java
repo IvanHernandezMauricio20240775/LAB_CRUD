@@ -24,6 +24,20 @@ public class BookController {
     public List<BookDTO> getAllBooks(){
         return accesBookService.GetAllListbook();
     }
+    @GetMapping("/SearchBook/{id_Book}")
+    public ResponseEntity<ApiResponse<BookDTO>> GetBookByID(@PathVariable("id_Book") Long id_Book){
+        try {
+            BookDTO bookData = accesBookService.getBookByID(id_Book);
+            ApiResponse<BookDTO> succesResponse = new ApiResponse<>(false, "Libro Encontrado:", bookData);
+            return  new ResponseEntity<>(succesResponse, HttpStatus.OK);
+        }catch (EntityNotFoundException e){
+            ApiResponse<BookDTO> errorResponse = new ApiResponse<>(false, e.getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }catch (Exception e){
+            ApiResponse<BookDTO> errorResponse = new ApiResponse<>(false, e.getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/InsertNewBook")
     public ResponseEntity<ApiResponse<BookDTO>> CreateNewBook(@Valid  @RequestBody BookDTO bookDTO){
@@ -45,7 +59,7 @@ public class BookController {
     public ResponseEntity<ApiResponse<BookDTO>> Updatedbook(@PathVariable Long id_Book,  @Valid  @RequestBody BookDTO bookDTO){
         try {
             BookDTO updatedbook  = accesBookService.UpdatedBook(id_Book, bookDTO);
-            ApiResponse<BookDTO> succesResponse = new ApiResponse<>(false, "Actualizacion Exitosa", updatedbook);
+            ApiResponse<BookDTO> succesResponse = new ApiResponse<>(true, "Actualizacion Exitosa", updatedbook);
             return  new ResponseEntity<>(succesResponse, HttpStatus.OK);
         }catch(EntityNotFoundException e){
             ApiResponse<BookDTO> errorResponse = new ApiResponse<>(false, e.getMessage(), null);
@@ -63,8 +77,8 @@ public class BookController {
     public ResponseEntity<ApiResponse<Void>> DeleteBook(@PathVariable Long id_Book){
         try {
             boolean Deletebook = accesBookService.DeleteBook(id_Book);
-           if(!Deletebook){
-               ApiResponse<Void> succesResponse = new ApiResponse<>(false, "Actualizacion Exitosa", null);
+           if(Deletebook){
+               ApiResponse<Void> succesResponse = new ApiResponse<>(true, "Eliminacion Exitosa", null);
                return new ResponseEntity<>(succesResponse, HttpStatus.OK);
            }else{
                ApiResponse<Void> succesResponse = new ApiResponse<>(false, "no se pudo eliminar el libro", null);

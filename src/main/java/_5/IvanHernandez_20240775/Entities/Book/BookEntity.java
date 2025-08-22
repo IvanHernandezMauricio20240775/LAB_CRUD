@@ -15,10 +15,10 @@ public class BookEntity {
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "TITULO")
+    @Column(name = "TITULO", nullable = false)
     private String title;
 
-    @Column(name = "ISBN")
+    @Column(name = "ISBN", nullable = false, unique = true)
     private String isbn;
 
     @Column(name = "AÑO_PUBLICACION")
@@ -27,7 +27,7 @@ public class BookEntity {
     @Column(name = "GENERO")
     private String gender;
 
-    @Column(name = "AUTOR_ID")
+    @Column(name = "AUTOR_ID", nullable = false)
     private Long authorid;
 
 }

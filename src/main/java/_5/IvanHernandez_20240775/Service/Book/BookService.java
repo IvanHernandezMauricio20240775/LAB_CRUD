@@ -3,6 +3,7 @@ package _5.IvanHernandez_20240775.Service.Book;
 import _5.IvanHernandez_20240775.Entities.Book.BookEntity;
 import _5.IvanHernandez_20240775.Models.DTO.BookDTO;
 import _5.IvanHernandez_20240775.Repositories.Book.BookRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -17,11 +19,11 @@ import java.util.stream.Collectors;
 public class BookService {
 
     @Autowired
-    BookRepository accesBookRepository;
+    BookRepository accesBookRepository; //Sobrescrivimos la interfaz bookRepository y creamos un objeto para acceder a todos los metodos de JPARepository
 
     public List<BookDTO> GetAllListbook(){
 
-        List<BookEntity> book = accesBookRepository.findAll();
+        List<BookEntity> book = accesBookRepository.findAll(); //Creamos una lista de tipo entity que se llenara
 
         return  book.stream()
                 .map(this::ConvertBookToDTO).
@@ -73,11 +75,22 @@ public class BookService {
                 log.warn("libro no encontrado");
                 return false;
             }
-        }catch (Exception e){
+        }catch (EmptyResultDataAccessException e){
             log.error("Error Al eliminar el Libro" + e.getMessage());
-            throw  new IllegalArgumentException("Error al Eliminar el Libro");
+            throw  new EmptyResultDataAccessException("Error al Eliminar el Libro", +1);
         }
     }
+
+    public BookDTO getBookByID(Long id_Book){
+        Optional<BookEntity> BookOptional = accesBookRepository.findById(id_Book);
+
+        if(BookOptional.isPresent()){
+            return  ConvertBookToDTO(BookOptional.get());
+        }else{
+            throw new EntityNotFoundException("No se encontro el Libro con ID" +id_Book + "para eliminar");
+        }
+    }
+
 
 
     //Metodo para convertir el Book en formato Entity a DTO para poder enviarlo a nuestro Controlador

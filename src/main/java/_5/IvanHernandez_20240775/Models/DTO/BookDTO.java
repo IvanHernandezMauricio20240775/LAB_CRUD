@@ -24,16 +24,16 @@ public class BookDTO {
 
     @JsonProperty("ISBN")
     @NotBlank(message = "El ISBN No debe de ir vacio")
+    @Size(min = 17, max = 20, message = "El codigo normalizado internacional para libros debe de tener maximo 20 y minimo 17 caracteres ")
     private String isbn;
 
     @JsonProperty("AÑO_PUBLICACION")
     @Positive(message = "El año debe de ser positivo")
-    @Min(value = 4, message = "El año debe de contener 4 digitos")
-    @Max(value = 4, message = "El Año debe de llevar maximo 4 digitos")
     private Long yearpublication;
 
 
     @JsonProperty("GENERO")
+    @Pattern(regexp = "^(masculino|femenino|no binario|MASCULINO|FEMENINO|NO BINARIO)$", message = "El genero debe de ser masculino femenino o binario, y todas deben de ser ya sea mayusculas o minisculas no convinado")
     private String gender;
 
     @JsonProperty("AUTOR_ID")
