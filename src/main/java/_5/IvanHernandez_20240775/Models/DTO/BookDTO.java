@@ -17,9 +17,9 @@ public class BookDTO {
     private Long id;
 
     @JsonProperty("TITULO")
-    @NotBlank(message = "El titulo no debe de ir vacio")
-    @NotEmpty
-    @Size(min = 1)
+    @NotBlank(message = "El titulo no debe de ir vacio") //Validamos que no vaya vacio
+    @NotEmpty//Validamos que no vaya vacio
+    @Size(min = 1, max = 200)//Validamos que tenga un minimo de caracter
     private String title;
 
     @JsonProperty("ISBN")
@@ -33,7 +33,6 @@ public class BookDTO {
 
 
     @JsonProperty("GENERO")
-    @Pattern(regexp = "^(masculino|femenino|no binario|MASCULINO|FEMENINO|NO BINARIO)$", message = "El genero debe de ser masculino femenino o binario, y todas deben de ser ya sea mayusculas o minisculas no convinado")
     private String gender;
 
     @JsonProperty("AUTOR_ID")
